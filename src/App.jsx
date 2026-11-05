@@ -54,6 +54,7 @@ const emptyData = {
 function loadSavedData() {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
     return {
       liked: Array.isArray(data?.liked) ? data.liked : [],
       seen: Array.isArray(data?.seen) ? data.seen : []
@@ -87,6 +88,7 @@ export default function App() {
       liked: kind === 'like'
         ? [...saved.liked, person.name]
         : saved.liked,
+
       seen: [...saved.seen, person.name]
     };
 
@@ -95,7 +97,7 @@ export default function App() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {
-      // Demo continues even if browser storage is unavailable.
+      // Browser storage unavailable.
     }
 
     setNotice(
@@ -105,21 +107,11 @@ export default function App() {
     );
   };
 
-  const resetDemo = () => {
-    setSaved(emptyData);
-    setNotice('');
-
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // Ignore storage errors.
-    }
-  };
-
   if (!showDemo) {
     return (
       <div className="auth-page">
         <div className="auth-card">
+
           <div className="auth-logo">
             <Heart size={28} fill="white" />
           </div>
@@ -162,6 +154,7 @@ export default function App() {
             No real accounts or personal data are stored.
             This concept is intended for adults aged 18+.
           </p>
+
         </div>
       </div>
     );
@@ -169,7 +162,9 @@ export default function App() {
 
   return (
     <div className="app-shell">
+
       <aside className="sidebar">
+
         <div className="brand">
           <span className="brand-icon">
             <Heart size={20} fill="white" />
@@ -196,6 +191,7 @@ export default function App() {
         ))}
 
         <div className="sidebar-bottom">
+
           <div className="safety">
             <ShieldCheck size={18} />
             <div>
@@ -219,13 +215,19 @@ export default function App() {
             <UserRound />
             Back to Login
           </button>
+
         </div>
       </aside>
 
       <main className="main">
+
         <header className="topbar">
+
           <div>
-            <div className="eyebrow">YOUR SPACE TO CONNECT</div>
+            <div className="eyebrow">
+              YOUR SPACE TO CONNECT
+            </div>
+
             <h1>
               {tab === 'Discover' ? 'Discover people' : tab}
             </h1>
@@ -235,11 +237,15 @@ export default function App() {
             <SlidersHorizontal size={17} />
             Filters
           </button>
+
         </header>
 
         {tab === 'Discover' ? (
+
           <section className="discover-layout">
+
             <div className="intro">
+
               <span className="pill">
                 <Sparkles size={14} />
                 Curated discovery
@@ -254,14 +260,18 @@ export default function App() {
               <p>
                 Explore sample profiles in this private UI prototype.
               </p>
+
             </div>
 
             {person ? (
+
               <div className="profile-card">
+
                 <div
                   className="photo"
                   style={{ background: person.color }}
                 >
+
                   <div className="avatar">
                     {person.initials}
                   </div>
@@ -273,6 +283,7 @@ export default function App() {
                   <div className="photo-gradient"></div>
 
                   <div className="person-heading">
+
                     <h2>
                       {person.name}, {person.age}
                     </h2>
@@ -281,10 +292,12 @@ export default function App() {
                       <MapPin size={14} />
                       {person.city}
                     </span>
+
                   </div>
                 </div>
 
                 <div className="profile-info">
+
                   <p>{person.about}</p>
 
                   <div className="tags">
@@ -294,6 +307,7 @@ export default function App() {
                   </div>
 
                   <div className="actions">
+
                     <button
                       className="pass"
                       onClick={() => act('pass')}
@@ -309,15 +323,22 @@ export default function App() {
                     >
                       <Heart fill="white" />
                     </button>
+
                   </div>
 
                   {notice && (
-                    <small className="notice">{notice}</small>
+                    <small className="notice">
+                      {notice}
+                    </small>
                   )}
+
                 </div>
               </div>
+
             ) : (
+
               <section className="placeholder">
+
                 <div className="placeholder-icon">
                   <Heart />
                 </div>
@@ -326,16 +347,23 @@ export default function App() {
 
                 <p>
                   You have viewed all available demo profiles.
+                  Your liked profiles are saved in Matches.
                 </p>
 
-                <button className="primary" onClick={resetDemo}>
-                  Reset Demo
+                <button
+                  className="primary"
+                  onClick={() => setTab('Matches')}
+                >
+                  View Likes
                   <ChevronRight size={16} />
                 </button>
+
               </section>
+
             )}
 
             <div className="side-note">
+
               <div className="note-icon">
                 <ShieldCheck />
               </div>
@@ -346,10 +374,15 @@ export default function App() {
                 All profiles are fictional sample data.
                 No account, location tracking or messaging is connected.
               </p>
+
             </div>
+
           </section>
+
         ) : tab === 'Matches' ? (
+
           <section className="placeholder">
+
             <div className="placeholder-icon">
               <Heart />
             </div>
@@ -363,6 +396,7 @@ export default function App() {
             </p>
 
             {likedPeople.length > 0 && (
+
               <div
                 style={{
                   display: 'grid',
@@ -372,25 +406,37 @@ export default function App() {
                   marginTop: '24px'
                 }}
               >
+
                 {likedPeople.map(p => (
+
                   <div className="profile-card" key={p.name}>
+
                     <div
                       className="photo"
                       style={{ background: p.color }}
                     >
-                      <div className="avatar">{p.initials}</div>
-                      <span className="photo-tag">LIKED PROFILE</span>
+
+                      <div className="avatar">
+                        {p.initials}
+                      </div>
+
+                      <span className="photo-tag">
+                        LIKED PROFILE
+                      </span>
 
                       <div className="person-heading">
                         <h2>{p.name}, {p.age}</h2>
+
                         <span>
                           <MapPin size={14} />
                           {p.city}
                         </span>
                       </div>
+
                     </div>
 
                     <div className="profile-info">
+
                       <p>{p.about}</p>
 
                       <div className="tags">
@@ -398,10 +444,15 @@ export default function App() {
                           <span key={x}>{x}</span>
                         ))}
                       </div>
+
                     </div>
+
                   </div>
+
                 ))}
+
               </div>
+
             )}
 
             <button
@@ -412,9 +463,13 @@ export default function App() {
               Back to Discover
               <ChevronRight size={16} />
             </button>
+
           </section>
+
         ) : (
+
           <section className="placeholder">
+
             <div className="placeholder-icon">
               {tab === 'Messages' ? (
                 <MessageCircle />
@@ -446,13 +501,16 @@ export default function App() {
               Back to Discover
               <ChevronRight size={16} />
             </button>
+
           </section>
+
         )}
 
         <footer>
           LoveConnect <span>•</span> UI prototype
           <span>•</span> Fictional sample profiles only
         </footer>
+
       </main>
     </div>
   );
