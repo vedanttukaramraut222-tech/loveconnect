@@ -75,7 +75,9 @@ export default function App() {
     person => !saved.seen.includes(person.name)
   );
 
-  const person = remainingPeople[0];
+  const person = remainingPeople.length > 0
+    ? remainingPeople[0]
+    : people[0];
 
   const likedPeople = people.filter(
     person => saved.liked.includes(person.name)
@@ -84,12 +86,20 @@ export default function App() {
   const act = (kind) => {
     if (!person) return;
 
+    const currentSeen = remainingPeople.length > 0
+      ? saved.seen
+      : [];
+
+    const nextSeen = [...currentSeen, person.name];
+
     const next = {
       liked: kind === 'like'
-        ? [...saved.liked, person.name]
+        ? [...new Set([...saved.liked, person.name])]
         : saved.liked,
 
-      seen: [...saved.seen, person.name]
+      seen: nextSeen.length >= people.length
+        ? []
+        : nextSeen
     };
 
     setSaved(next);
@@ -263,104 +273,75 @@ export default function App() {
 
             </div>
 
-            {person ? (
+            <div className="profile-card">
 
-              <div className="profile-card">
+              <div
+                className="photo"
+                style={{ background: person.color }}
+              >
 
-                <div
-                  className="photo"
-                  style={{ background: person.color }}
-                >
-
-                  <div className="avatar">
-                    {person.initials}
-                  </div>
-
-                  <span className="photo-tag">
-                    SAMPLE PROFILE
-                  </span>
-
-                  <div className="photo-gradient"></div>
-
-                  <div className="person-heading">
-
-                    <h2>
-                      {person.name}, {person.age}
-                    </h2>
-
-                    <span>
-                      <MapPin size={14} />
-                      {person.city}
-                    </span>
-
-                  </div>
+                <div className="avatar">
+                  {person.initials}
                 </div>
 
-                <div className="profile-info">
+                <span className="photo-tag">
+                  SAMPLE PROFILE
+                </span>
 
-                  <p>{person.about}</p>
+                <div className="photo-gradient"></div>
 
-                  <div className="tags">
-                    {person.interests.map(x => (
-                      <span key={x}>{x}</span>
-                    ))}
-                  </div>
+                <div className="person-heading">
 
-                  <div className="actions">
+                  <h2>
+                    {person.name}, {person.age}
+                  </h2>
 
-                    <button
-                      className="pass"
-                      onClick={() => act('pass')}
-                      aria-label="Pass"
-                    >
-                      <X />
-                    </button>
-
-                    <button
-                      className="like"
-                      onClick={() => act('like')}
-                      aria-label="Like"
-                    >
-                      <Heart fill="white" />
-                    </button>
-
-                  </div>
-
-                  {notice && (
-                    <small className="notice">
-                      {notice}
-                    </small>
-                  )}
+                  <span>
+                    <MapPin size={14} />
+                    {person.city}
+                  </span>
 
                 </div>
               </div>
 
-            ) : (
+              <div className="profile-info">
 
-              <section className="placeholder">
+                <p>{person.about}</p>
 
-                <div className="placeholder-icon">
-                  <Heart />
+                <div className="tags">
+                  {person.interests.map(x => (
+                    <span key={x}>{x}</span>
+                  ))}
                 </div>
 
-                <h2>You've seen all sample profiles!</h2>
+                <div className="actions">
 
-                <p>
-                  You have viewed all available demo profiles.
-                  Your liked profiles are saved in Matches.
-                </p>
+                  <button
+                    className="pass"
+                    onClick={() => act('pass')}
+                    aria-label="Pass"
+                  >
+                    <X />
+                  </button>
 
-                <button
-                  className="primary"
-                  onClick={() => setTab('Matches')}
-                >
-                  View Likes
-                  <ChevronRight size={16} />
-                </button>
+                  <button
+                    className="like"
+                    onClick={() => act('like')}
+                    aria-label="Like"
+                  >
+                    <Heart fill="white" />
+                  </button>
 
-              </section>
+                </div>
 
-            )}
+                {notice && (
+                  <small className="notice">
+                    {notice}
+                  </small>
+                )}
+
+              </div>
+            </div>
 
             <div className="side-note">
 
